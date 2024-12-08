@@ -55,7 +55,7 @@
             label11 = new Label();
             Btn_YetkiliGiris = new Button();
             label10 = new Label();
-            Txt_YetkiliKadi = new TextBox();
+            Txt_YetkiliTc = new TextBox();
             Txt_YetkiliSifre = new TextBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -64,9 +64,9 @@
             // 
             // Btn_VatandasKayıt
             // 
-            Btn_VatandasKayıt.Location = new Point(100, 191);
+            Btn_VatandasKayıt.Location = new Point(101, 191);
             Btn_VatandasKayıt.Name = "Btn_VatandasKayıt";
-            Btn_VatandasKayıt.Size = new Size(125, 38);
+            Btn_VatandasKayıt.Size = new Size(125, 37);
             Btn_VatandasKayıt.TabIndex = 0;
             Btn_VatandasKayıt.Text = "KAYIT OL";
             Btn_VatandasKayıt.UseVisualStyleBackColor = true;
@@ -74,9 +74,9 @@
             // 
             // Btn_VatandasGiris
             // 
-            Btn_VatandasGiris.Location = new Point(100, 338);
+            Btn_VatandasGiris.Location = new Point(101, 339);
             Btn_VatandasGiris.Name = "Btn_VatandasGiris";
-            Btn_VatandasGiris.Size = new Size(125, 38);
+            Btn_VatandasGiris.Size = new Size(125, 37);
             Btn_VatandasGiris.TabIndex = 0;
             Btn_VatandasGiris.Text = "GİRİŞ YAP";
             Btn_VatandasGiris.UseVisualStyleBackColor = true;
@@ -84,35 +84,35 @@
             // 
             // Txt_VatandasTc
             // 
-            Txt_VatandasTc.Location = new Point(100, 26);
+            Txt_VatandasTc.Location = new Point(101, 27);
             Txt_VatandasTc.Name = "Txt_VatandasTc";
             Txt_VatandasTc.Size = new Size(125, 27);
             Txt_VatandasTc.TabIndex = 1;
             // 
             // Txt_VatandasAd
             // 
-            Txt_VatandasAd.Location = new Point(100, 59);
+            Txt_VatandasAd.Location = new Point(101, 59);
             Txt_VatandasAd.Name = "Txt_VatandasAd";
             Txt_VatandasAd.Size = new Size(125, 27);
             Txt_VatandasAd.TabIndex = 1;
             // 
             // Txt_VatandasSoyad
             // 
-            Txt_VatandasSoyad.Location = new Point(100, 92);
+            Txt_VatandasSoyad.Location = new Point(101, 92);
             Txt_VatandasSoyad.Name = "Txt_VatandasSoyad";
             Txt_VatandasSoyad.Size = new Size(125, 27);
             Txt_VatandasSoyad.TabIndex = 1;
             // 
             // Txt_VatandasTel
             // 
-            Txt_VatandasTel.Location = new Point(100, 125);
+            Txt_VatandasTel.Location = new Point(101, 125);
             Txt_VatandasTel.Name = "Txt_VatandasTel";
             Txt_VatandasTel.Size = new Size(125, 27);
             Txt_VatandasTel.TabIndex = 1;
             // 
             // Txt_VatandasSifre
             // 
-            Txt_VatandasSifre.Location = new Point(100, 158);
+            Txt_VatandasSifre.Location = new Point(101, 157);
             Txt_VatandasSifre.Name = "Txt_VatandasSifre";
             Txt_VatandasSifre.PasswordChar = '*';
             Txt_VatandasSifre.Size = new Size(125, 27);
@@ -130,7 +130,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(13, 66);
+            label2.Location = new Point(13, 67);
             label2.Name = "label2";
             label2.Size = new Size(37, 20);
             label2.TabIndex = 2;
@@ -165,14 +165,14 @@
             // 
             // Txt_VatandasGirisTc
             // 
-            Txt_VatandasGirisTc.Location = new Point(100, 272);
+            Txt_VatandasGirisTc.Location = new Point(101, 272);
             Txt_VatandasGirisTc.Name = "Txt_VatandasGirisTc";
             Txt_VatandasGirisTc.Size = new Size(125, 27);
             Txt_VatandasGirisTc.TabIndex = 1;
             // 
             // Txt_VatandasGirisSifre
             // 
-            Txt_VatandasGirisSifre.Location = new Point(100, 305);
+            Txt_VatandasGirisSifre.Location = new Point(101, 305);
             Txt_VatandasGirisSifre.Name = "Txt_VatandasGirisSifre";
             Txt_VatandasGirisSifre.PasswordChar = '*';
             Txt_VatandasGirisSifre.Size = new Size(125, 27);
@@ -214,7 +214,7 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(Txt_VatandasGirisTc);
             groupBox1.Controls.Add(Txt_VatandasGirisSifre);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(11, 12);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(245, 385);
             groupBox1.TabIndex = 3;
@@ -244,7 +244,7 @@
             groupBox2.Controls.Add(Btn_DoktorGiris);
             groupBox2.Location = new Point(314, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(292, 143);
+            groupBox2.Size = new Size(293, 143);
             groupBox2.TabIndex = 5;
             groupBox2.TabStop = false;
             groupBox2.Text = "Doktor";
@@ -269,9 +269,9 @@
             // 
             // Btn_DoktorGiris
             // 
-            Btn_DoktorGiris.Location = new Point(145, 94);
+            Btn_DoktorGiris.Location = new Point(145, 93);
             Btn_DoktorGiris.Name = "Btn_DoktorGiris";
-            Btn_DoktorGiris.Size = new Size(125, 38);
+            Btn_DoktorGiris.Size = new Size(125, 37);
             Btn_DoktorGiris.TabIndex = 0;
             Btn_DoktorGiris.Text = "GİRİŞ YAP";
             Btn_DoktorGiris.UseVisualStyleBackColor = true;
@@ -282,11 +282,11 @@
             groupBox3.Controls.Add(label11);
             groupBox3.Controls.Add(Btn_YetkiliGiris);
             groupBox3.Controls.Add(label10);
-            groupBox3.Controls.Add(Txt_YetkiliKadi);
+            groupBox3.Controls.Add(Txt_YetkiliTc);
             groupBox3.Controls.Add(Txt_YetkiliSifre);
-            groupBox3.Location = new Point(314, 258);
+            groupBox3.Location = new Point(314, 259);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(292, 139);
+            groupBox3.Size = new Size(293, 139);
             groupBox3.TabIndex = 6;
             groupBox3.TabStop = false;
             groupBox3.Text = "Yetkili";
@@ -294,7 +294,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(15, 62);
+            label11.Location = new Point(15, 61);
             label11.Name = "label11";
             label11.Size = new Size(52, 20);
             label11.TabIndex = 5;
@@ -304,7 +304,7 @@
             // 
             Btn_YetkiliGiris.Location = new Point(145, 92);
             Btn_YetkiliGiris.Name = "Btn_YetkiliGiris";
-            Btn_YetkiliGiris.Size = new Size(125, 38);
+            Btn_YetkiliGiris.Size = new Size(125, 37);
             Btn_YetkiliGiris.TabIndex = 0;
             Btn_YetkiliGiris.Text = "GİRİŞ YAP";
             Btn_YetkiliGiris.UseVisualStyleBackColor = true;
@@ -315,16 +315,16 @@
             label10.AutoSize = true;
             label10.Location = new Point(15, 31);
             label10.Name = "label10";
-            label10.Size = new Size(116, 20);
+            label10.Size = new Size(91, 20);
             label10.TabIndex = 5;
-            label10.Text = "KULLANICI ADI :";
+            label10.Text = "YETKİLİ T.C. :";
             // 
-            // Txt_YetkiliKadi
+            // Txt_YetkiliTc
             // 
-            Txt_YetkiliKadi.Location = new Point(145, 26);
-            Txt_YetkiliKadi.Name = "Txt_YetkiliKadi";
-            Txt_YetkiliKadi.Size = new Size(125, 27);
-            Txt_YetkiliKadi.TabIndex = 4;
+            Txt_YetkiliTc.Location = new Point(145, 27);
+            Txt_YetkiliTc.Name = "Txt_YetkiliTc";
+            Txt_YetkiliTc.Size = new Size(125, 27);
+            Txt_YetkiliTc.TabIndex = 4;
             // 
             // Txt_YetkiliSifre
             // 
@@ -337,11 +337,12 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(639, 424);
+            ClientSize = new Size(618, 427);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "Ana_Sayfa";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Ana Sayfa";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -381,7 +382,7 @@
         private Label label11;
         private Button Btn_YetkiliGiris;
         private Label label10;
-        private TextBox Txt_YetkiliKadi;
+        private TextBox Txt_YetkiliTc;
         private TextBox Txt_YetkiliSifre;
     }
 }

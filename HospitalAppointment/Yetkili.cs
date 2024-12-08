@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Configuration;
+﻿using System.Data;
+using HospitalAppointment.Model;
+using HospitalAppointment.Models;
 
 namespace HospitalAppointment
 {
@@ -11,92 +11,319 @@ namespace HospitalAppointment
             InitializeComponent();
         }
 
-        readonly string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        Int16 doktorId;
 
-
-        public void KlinikDoldur()
+        private static void KlinikDoldur(ComboBox comboBox, List<KlinikC> klinikler)
         {
-            Cmb_Klinik.Items.Clear();
-            string sqlSorgusu = "select * from Tbl_Klinikler order by Klinik_Ad asc";
 
-            using var baglanti = new SqlConnection(connectionString);
+            string sqlSorgusu = "select * from Tbl_Klinikler where aktifMi='1' order by Klinik_Ad asc";
 
-            try
+            if (VeritabaniIslemleri.SorguCalistir(sqlSorgusu) is DataTable sonuc)
             {
-                baglanti.Open();
+                klinikler.Clear();
 
-                using var komut = new SqlCommand(sqlSorgusu, baglanti);
-                using var reader = komut.ExecuteReader();
+                foreach (DataRow row in sonuc.Rows)
+                {
+                    var klinik = new KlinikC(
+                        klinikAd: row["Klinik_Ad"].ToString(),
+                        klinikID: Convert.ToInt32(row["Klinik_ID"])
+                    );
 
-                var dt = new DataTable();
-                dt.Load(reader);
+                    klinikler.Add(klinik);
+                }
 
-                Cmb_Klinik.DataSource = dt;
-                Cmb_Klinik.DisplayMember = "Klinik_Ad";
-                Cmb_Klinik.ValueMember = "Klinik_Id";
+                comboBox.DataSource = klinikler;
+                comboBox.DisplayMember = "KlinikAd";
+                comboBox.ValueMember = "KlinikID";
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Hata : {ex.Message}");
+                MessageBox.Show("Klinikler yüklenirken bir hata oluştu.");
+            }
+
+        }
+
+        private void KlinikSayısı()
+        {
+            string sqlSorgusu = "SELECT COUNT(*) FROM Tbl_Klinikler WHERE aktifMi = '1'";
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, tekDegerMi: true);
+
+            if (sonuc != null && int.TryParse(sonuc.ToString(), out int klinikSayisi))
+            {
+                Lbl_KlinikSayisi.Text = klinikSayisi.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Klinik sayısı alınırken hata oluştu.");
             }
         }
 
-        public void KlinikSayısı()
+        private void KlinikIslemleri()
         {
-            string sqlSorgusu = "select count(*) from Tbl_Klinikler";
+            List<KlinikC> klinikler = [];
+            KlinikDoldur(Cmb_Klinik, klinikler);
+            KlinikDoldur(Cmb_DoktorKlinik, klinikler);
+            KlinikSayısı();
+        }
 
-            using var baglanti = new SqlConnection(connectionString);
-
-            try
+        private void KlinikEkle(KlinikC klinik)
+        {
+            if (string.IsNullOrWhiteSpace(klinik.KlinikAd))
             {
-                baglanti.Open();
-
-                using var komut = new SqlCommand(sqlSorgusu, baglanti);
-                var klinikSayisi = komut.ExecuteScalar();
-
-                Lbl_KlinikSayisi.Text = klinikSayisi.ToString();
-
+                MessageBox.Show("Klinik adı boş olamaz.");
+                return;
             }
-            catch (Exception ex)
+
+            string sqlSorgusu = "insert into Tbl_Klinikler(Klinik_Ad) values(@Klinik_Ad)";
+            var parametreler = new Dictionary<string, object>()
             {
-                MessageBox.Show($"Hata : {ex.Message}");
+                { "@Klinik_Ad", klinik.KlinikAd }
+            };
+
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+
+            if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
+            {
+                MessageBox.Show("Klinik başarıyla eklendi.");
+                KlinikIslemleri();
             }
+            else
+                MessageBox.Show("Klinik eklenirken bir hata oluştu.");
+
+        }
+
+        private void KlinikSil(KlinikC klinik)
+        {
+            string sqlSorgusu = "update Tbl_Klinikler set aktifMi='0' where Klinik_ID=@Klinik_ID";
+
+            var parametreler = new Dictionary<string, object>()
+            {
+                {"@Klinik_ID", klinik.KlinikID}
+            };
+
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+
+            if (sonuc is int etilenenSatir && etilenenSatir > 0)
+            {
+                MessageBox.Show("Klinik başarıyla silindi.");
+                KlinikIslemleri();
+            }
+            else
+                MessageBox.Show("Klinik silinemedi.");
+
+        }
+
+        private static void DoktorGridDoldur(DataGridView dataGridView)
+        {
+            string sqlSorgusu = @"
+            SELECT 
+                d.Doktor_ID AS 'ID',
+                d.TC AS 'T.C. NO',
+                d.Ad AS 'Ad',
+                d.Soyad AS 'Soyad',
+                d.Telefon AS 'Telefon',
+                d.Sifre AS 'Sifre',
+                k.Klinik_Ad AS 'Klinik'
+            FROM 
+                Tbl_Doktorlar d
+            INNER JOIN 
+                Tbl_Klinikler k ON d.Klinik_ID = k.Klinik_ID
+            WHERE
+                d.aktifMi = '1'";
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu);
+            if (sonuc is DataTable dt)
+                dataGridView.DataSource = sonuc;
+            else
+                MessageBox.Show("Doktorlar yüklenirken hata oluştu!");
+
+        }
+
+        private void DoktorEkle(DoktorC doktor)
+        {
+            string sqlSorgusu = @"
+            insert into Tbl_Doktorlar(TC,Ad,Soyad,Telefon,Sifre,Klinik_ID)
+            values(@TC,@Ad,@Soyad,@Telefon,@Sifre,@Klinik_ID)";
+
+            var parametreler = new Dictionary<string, object>()
+            {
+                {"@TC", doktor.TC },
+                {"@Ad",doktor.Ad },
+                {"@Soyad",doktor.Soyad },
+                {"@Telefon",doktor.Telefon },
+                {"@Sifre",doktor.Sifre },
+                {"@Klinik_ID",doktor.Klinik_ID }
+            };
+
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+            if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
+            {
+                MessageBox.Show("Doktor başarıyla etkilendi.");
+                DoktorGridDoldur(Grid_Doktorlar);
+            }
+            else
+                MessageBox.Show("Doktor eklenirken bir sorun oluştu.");
+
+        }
+
+        private void DoktorGuncelle(DoktorC doktor)
+        {
+            string sqlSorgusu = @"
+                        UPDATE Tbl_Doktorlar
+                        SET 
+                            Ad = @Ad,
+                            Soyad = @Soyad,
+                            Telefon = @Telefon,
+                            Sifre = @Sifre,
+                            Klinik_ID = @Klinik_ID
+                        WHERE 
+                            Doktor_ID = @Doktor_ID";
+
+            var parametreler = new Dictionary<string, object>()
+            {
+                {"@Doktor_ID",doktor.Doktor_ID},
+                {"@TC", doktor.TC },
+                {"@Ad",doktor.Ad },
+                {"@Soyad",doktor.Soyad },
+                {"@Telefon",doktor.Telefon },
+                {"@Sifre",doktor.Sifre },
+                {"@Klinik_ID",doktor.Klinik_ID }
+            };
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+
+            if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
+            {
+                MessageBox.Show("Doktor başarıyla güncellendi.");
+                DoktorGridDoldur(Grid_Doktorlar);
+            }
+            else
+                MessageBox.Show("Doktor güncellenirken bir sorun oluştu.");
+        }
+
+        private void DoktorSil()
+        {
+            if (doktorId == 0)
+            {
+                MessageBox.Show("Doktor seçsene dostum");
+                return;
+            }
+            string sqlSorgusu = "update Tbl_Doktorlar set aktifMi='0' where Doktor_ID=@Doktor_ID";
+
+            var parametreler = new Dictionary<string, object>()
+            {
+                {"@Doktor_ID", doktorId}
+            };
+
+            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+
+            if (sonuc is int etilenenSatir && etilenenSatir > 0)
+            {
+                MessageBox.Show("Doktor başarıyla silindi.");
+                DoktorGridDoldur(Grid_Doktorlar);
+                doktorId = 0;
+            }
+            else
+                MessageBox.Show("Doktor silinemedi.");
         }
 
         private void Yetkili_Load(object sender, EventArgs e)
         {
-            KlinikDoldur();
-            KlinikSayısı();
+            KlinikIslemleri();
+            DoktorGridDoldur(Grid_Doktorlar);
         }
 
         private void Btn_KlinikEkle_Click(object sender, EventArgs e)
         {
-            string sqlSorgusu = "insert into Tbl_Klinikler(Klinik_Ad) values(@Klinik_Ad)";
-            using var baglanti = new SqlConnection(connectionString);
+            var klinik = new KlinikC(klinikAd: Txt_KlinikEkle.Text.Trim());
+            KlinikEkle(klinik);
+        }
 
+        private void Btn_KlinikSil_Click(object sender, EventArgs e)
+        {
+            if (Cmb_Klinik.SelectedValue != null)
+            {
+                var klinik = new KlinikC(klinikID: Convert.ToInt32(Cmb_Klinik.SelectedValue));
+                KlinikSil(klinik);
+            }
+            else
+                MessageBox.Show("Lütfen silmek istediğiniz kliniği seçiniz.");
+        }
+
+        private void Btn_DoktorEkle_Click(object sender, EventArgs e)
+        {
             try
             {
-                baglanti.Open();
-
-                using var komut = new SqlCommand(sqlSorgusu, baglanti);
-                komut.Parameters.Add("", SqlDbType.NVarChar, 50).Value = Txt_KlinikEkle.Text.Trim();
-                int etkilenenSatirlar = komut.ExecuteNonQuery();
-
-                if (etkilenenSatirlar > 0)
+                if (Cmb_DoktorKlinik.SelectedValue == null)
                 {
-                    MessageBox.Show("Başarıyla klinik eklendi.");
-                    Txt_KlinikEkle.Clear();
+                    MessageBox.Show("Lütfen bir klinik seçiniz.");
+                    return;
                 }
-                else
-                    MessageBox.Show("Klinik eklenemedi.");
-
+                var doktor = new DoktorC(Txt_DoktorTC.Text.Trim(), Txt_DoktorAd.Text.Trim(), Txt_DoktorSoyad.Text.Trim(), Txt_DoktorTelefon.Text.Trim(), Txt_DoktorSifre.Text.Trim(), (int)Cmb_DoktorKlinik.SelectedValue);
+                DoktorEkle(doktor);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hata : {ex.Message}");
+                MessageBox.Show(ex.Message);
             }
-
         }
+
+        private void Btn_DoktorGuncelle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Cmb_DoktorKlinik.SelectedValue == null)
+                {
+                    MessageBox.Show("Lütfen bir klinik seçiniz.");
+                    return;
+                }
+                var doktor = new DoktorC(Txt_DoktorTC.Text.Trim(), Txt_DoktorAd.Text.Trim(), Txt_DoktorSoyad.Text.Trim(), Txt_DoktorTelefon.Text.Trim(), Txt_DoktorSifre.Text.Trim(), (int)Cmb_DoktorKlinik.SelectedValue, doktorId);
+                DoktorGuncelle(doktor);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Btn_DoktorSil_Click(object sender, EventArgs e)
+        {
+            DoktorSil();
+        }
+
+        private void Grid_Doktorlar_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) // Satır seçildiyse
+            {
+                using var selectedRow = Grid_Doktorlar.Rows[e.RowIndex];
+
+                doktorId = (Int16)selectedRow.Cells["ID"].Value;
+
+                string doktorTc = selectedRow.Cells["T.C. NO"].Value as string;
+                string doktorAd = selectedRow.Cells["Ad"].Value as string;
+                string doktorSoyad = selectedRow.Cells["Soyad"].Value as string;
+                string doktorTelefon = selectedRow.Cells["Telefon"].Value as string;
+                string doktorSifre = selectedRow.Cells["Sifre"].Value as string;
+                string klinikAd = selectedRow.Cells["Klinik"].Value as string;
+
+                // Textbox'lara doktor bilgilerini doldur
+                Txt_DoktorTC.Text = doktorTc;
+                Txt_DoktorAd.Text = doktorAd;
+                Txt_DoktorSoyad.Text = doktorSoyad;
+                Txt_DoktorTelefon.Text = doktorTelefon;
+                Txt_DoktorSifre.Text = doktorSifre;
+
+                // ComboBox'ta klinik adını seçili hale getir
+                foreach (var item in Cmb_DoktorKlinik.Items)
+                {
+                    var klinik = item as KlinikC;
+                    if (klinik != null && klinik.KlinikAd == klinikAd)
+                    {
+                        Cmb_DoktorKlinik.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+        }
+
 
     }
 }
