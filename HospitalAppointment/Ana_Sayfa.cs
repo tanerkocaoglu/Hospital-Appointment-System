@@ -12,6 +12,7 @@ namespace HospitalAppointment
             InitializeComponent();
         }
         public static string vatandasTC = "";
+        public static string doktorTC = "";
 
         private void Btn_VatandasKayıt_Click(object sender, EventArgs e)
         {
@@ -83,6 +84,7 @@ namespace HospitalAppointment
                 var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, tekDegerMi: true);
 
                 vatandasTC = tcTextBox.Text;
+                doktorTC = tcTextBox.Text;
 
                 if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
                     TabloyaGoreGirisYap(tabloAdi);
@@ -131,7 +133,9 @@ namespace HospitalAppointment
 
         private void DoktorGiris()
         {
-            MessageBox.Show("Hoş geldiniz!");
+            var muayene = new Muayene();
+            muayene.Show();
+            this.Hide();
         }
 
         public static bool TcKimlikNoKontrol(string tcKimlikNo)
