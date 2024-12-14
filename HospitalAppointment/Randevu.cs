@@ -153,6 +153,7 @@ namespace HospitalAppointment
             VeritabaniIslemleri.KlinikDoldur(Cmb_Klinik, klinikler);
 
             Date_RandevuTarih.MinDate = DateTime.Today.AddDays(1);
+            Date_RandevuTarih.MaxDate = DateTime.Today.AddDays(14);
             Date_RandevuTarih.Value = DateTime.Today.AddDays(1);
         }
 

@@ -449,7 +449,6 @@
             Name = "Ana_Sayfa";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Ana Sayfa";
-            Load += Ana_Sayfa_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Picture_Vatandas).EndInit();

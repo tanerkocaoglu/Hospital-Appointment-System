@@ -115,8 +115,9 @@ namespace HospitalAppointment
 
             Lbl_DoktorTC.Text = doktorTC;
             Lbl_DoktorID.Text = doktorID.ToString();
-            Date_Randevu.MinDate = DateTime.Today;
-            Date_Randevu.Value = DateTime.Today;
+            Date_Randevu.MinDate = DateTime.Today.AddDays(1);
+            Date_Randevu.MaxDate = DateTime.Today.AddDays(1);
+            Date_Randevu.Value = DateTime.Today.AddDays(1);
             _ = new GridView_Tasarim(Grid_Randevular);
         }
 

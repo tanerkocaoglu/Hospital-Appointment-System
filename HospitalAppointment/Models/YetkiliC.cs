@@ -1,6 +1,4 @@
-﻿using HospitalAppointment.Model;
-
-namespace HospitalAppointment.Models
+﻿namespace HospitalAppointment.Models
 {
     public class YetkiliC : KisiC
     {
