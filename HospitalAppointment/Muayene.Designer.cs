@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Muayene));
             Lbl_DoktorTC = new Label();
             Date_Randevu = new DateTimePicker();
             Grid_Randevular = new DataGridView();
@@ -66,6 +67,7 @@
             // 
             // Grid_Randevular
             // 
+            Grid_Randevular.BackgroundColor = Color.White;
             Grid_Randevular.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             Grid_Randevular.Location = new Point(27, 106);
             Grid_Randevular.Name = "Grid_Randevular";
@@ -171,18 +173,21 @@
             // 
             // Btn_MuayeneKaydet
             // 
+            Btn_MuayeneKaydet.BackColor = SystemColors.ControlLightLight;
+            Btn_MuayeneKaydet.FlatStyle = FlatStyle.Flat;
             Btn_MuayeneKaydet.Location = new Point(303, 468);
             Btn_MuayeneKaydet.Name = "Btn_MuayeneKaydet";
             Btn_MuayeneKaydet.Size = new Size(246, 85);
             Btn_MuayeneKaydet.TabIndex = 9;
             Btn_MuayeneKaydet.Text = "KAYDET";
-            Btn_MuayeneKaydet.UseVisualStyleBackColor = true;
+            Btn_MuayeneKaydet.UseVisualStyleBackColor = false;
             Btn_MuayeneKaydet.Click += Btn_MuayeneKaydet_Click;
             // 
             // Muayene
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientActiveCaption;
             ClientSize = new Size(589, 589);
             Controls.Add(Btn_MuayeneKaydet);
             Controls.Add(Nmrc_Rapor);
@@ -199,7 +204,9 @@
             Controls.Add(Lbl_DoktorID);
             Controls.Add(Date_Randevu);
             Controls.Add(Lbl_DoktorTC);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Muayene";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Muayene";
             Load += Muayene_Load;
             ((System.ComponentModel.ISupportInitialize)Grid_Randevular).EndInit();

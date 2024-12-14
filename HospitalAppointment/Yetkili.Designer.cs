@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Yetkili));
             Cmb_Klinik = new ComboBox();
             label1 = new Label();
             Txt_KlinikEkle = new TextBox();
@@ -62,7 +63,7 @@
             // Cmb_Klinik
             // 
             Cmb_Klinik.FormattingEnabled = true;
-            Cmb_Klinik.Location = new Point(702, 21);
+            Cmb_Klinik.Location = new Point(1009, 32);
             Cmb_Klinik.Name = "Cmb_Klinik";
             Cmb_Klinik.Size = new Size(151, 28);
             Cmb_Klinik.TabIndex = 0;
@@ -70,7 +71,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(593, 24);
+            label1.Location = new Point(900, 35);
             label1.Name = "label1";
             label1.Size = new Size(102, 20);
             label1.TabIndex = 1;
@@ -105,6 +106,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.BackColor = SystemColors.ActiveCaption;
             groupBox1.Controls.Add(Lbl_KlinikSayisi);
             groupBox1.Controls.Add(Cmb_Klinik);
             groupBox1.Controls.Add(Btn_KlinikSil);
@@ -114,7 +116,7 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Location = new Point(11, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(929, 148);
+            groupBox1.Size = new Size(1210, 148);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Klinik İşlemleri";
@@ -122,7 +124,7 @@
             // Lbl_KlinikSayisi
             // 
             Lbl_KlinikSayisi.AutoSize = true;
-            Lbl_KlinikSayisi.Location = new Point(870, 25);
+            Lbl_KlinikSayisi.Location = new Point(1177, 36);
             Lbl_KlinikSayisi.Name = "Lbl_KlinikSayisi";
             Lbl_KlinikSayisi.Size = new Size(17, 20);
             Lbl_KlinikSayisi.TabIndex = 4;
@@ -130,7 +132,7 @@
             // 
             // Btn_KlinikSil
             // 
-            Btn_KlinikSil.Location = new Point(593, 64);
+            Btn_KlinikSil.Location = new Point(900, 75);
             Btn_KlinikSil.Name = "Btn_KlinikSil";
             Btn_KlinikSil.Size = new Size(261, 43);
             Btn_KlinikSil.TabIndex = 3;
@@ -140,6 +142,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.BackColor = SystemColors.ActiveCaption;
             groupBox2.Controls.Add(Btn_DoktorSil);
             groupBox2.Controls.Add(Btn_DoktorGuncelle);
             groupBox2.Controls.Add(Btn_DoktorEkle);
@@ -158,7 +161,7 @@
             groupBox2.Controls.Add(Cmb_DoktorKlinik);
             groupBox2.Location = new Point(11, 172);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(929, 307);
+            groupBox2.Size = new Size(1210, 307);
             groupBox2.TabIndex = 5;
             groupBox2.TabStop = false;
             groupBox2.Text = "Doktor İşlemleri";
@@ -167,7 +170,7 @@
             // 
             Btn_DoktorSil.Location = new Point(368, 251);
             Btn_DoktorSil.Name = "Btn_DoktorSil";
-            Btn_DoktorSil.Size = new Size(538, 36);
+            Btn_DoktorSil.Size = new Size(826, 36);
             Btn_DoktorSil.TabIndex = 8;
             Btn_DoktorSil.Text = "Seçili Doktoru Sil";
             Btn_DoktorSil.UseVisualStyleBackColor = true;
@@ -196,6 +199,7 @@
             // Grid_Doktorlar
             // 
             Grid_Doktorlar.AllowUserToOrderColumns = true;
+            Grid_Doktorlar.BackgroundColor = Color.White;
             Grid_Doktorlar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Window;
@@ -208,7 +212,7 @@
             Grid_Doktorlar.Location = new Point(368, 43);
             Grid_Doktorlar.Name = "Grid_Doktorlar";
             Grid_Doktorlar.RowHeadersWidth = 51;
-            Grid_Doktorlar.Size = new Size(538, 193);
+            Grid_Doktorlar.Size = new Size(826, 193);
             Grid_Doktorlar.TabIndex = 6;
             Grid_Doktorlar.CellClick += Grid_Doktorlar_CellClick;
             // 
@@ -313,9 +317,11 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(955, 491);
+            BackColor = SystemColors.GradientActiveCaption;
+            ClientSize = new Size(1233, 491);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Yetkili";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Yetkili";

@@ -9,30 +9,6 @@ namespace HospitalAppointment
             InitializeComponent();
         }
 
-        private void KlinikDoldur(List<KlinikC> klinikler)
-        {
-            string sqlSorgusu = "select * from Tbl_Klinikler where aktifMi = 1 order by Klinik_Ad asc";
-            if (VeritabaniIslemleri.SorguCalistir(sqlSorgusu) is DataTable sonuc)
-            {
-                klinikler.Clear();
-                foreach (DataRow row in sonuc.Rows)
-                {
-                    var klinik = new KlinikC(
-                        klinikAd: row["Klinik_Ad"].ToString(),
-                        klinikID: Convert.ToInt32(row["Klinik_ID"])
-                        );
-                    klinikler.Add(klinik);
-                }
-
-                Cmb_Klinik.DataSource = klinikler;
-                Cmb_Klinik.DisplayMember = "KlinikAd";
-                Cmb_Klinik.ValueMember = "KlinikID";
-            }
-            else
-                MessageBox.Show("Klinikler yüklenirken bir hata oluştu.");
-
-        }
-
         private void DoktorDoldur(int klinikID)
         {
             string sqlSorgusu = @"
@@ -96,11 +72,11 @@ namespace HospitalAppointment
             var doluSaatler = DoluSaatleriGetir(secilenTarih, doktorID);
 
             // 08:00'dan 17:00'a kadar olan saatleri oluştur (30 dakika aralıklarla)
-            List<DateTime> tumSaatler = new();
+            List<DateTime> tumSaatler = [];
             DateTime baslangicSaat = secilenTarih.Date.AddHours(8); // 08:00
             DateTime bitisSaat = secilenTarih.Date.AddHours(17);   // 17:00
 
-            while (baslangicSaat < bitisSaat)
+            while (baslangicSaat <= bitisSaat)
             {
                 tumSaatler.Add(baslangicSaat);
                 baslangicSaat = baslangicSaat.AddMinutes(30);
@@ -172,12 +148,12 @@ namespace HospitalAppointment
 
         private void Randevu_Load(object sender, EventArgs e)
         {
-            Lbl_VatandasTC.Text = Ana_Sayfa.vatandasTC;
+            Lbl_VatandasTC.Text = Ana_Sayfa.VatandasTC;
             List<KlinikC> klinikler = [];
-            KlinikDoldur(klinikler);
+            VeritabaniIslemleri.KlinikDoldur(Cmb_Klinik, klinikler);
 
-            Date_RandevuTarih.MinDate = DateTime.Today;
-            Date_RandevuTarih.Value = DateTime.Today;
+            Date_RandevuTarih.MinDate = DateTime.Today.AddDays(1);
+            Date_RandevuTarih.Value = DateTime.Today.AddDays(1);
         }
 
         private void Cmb_Klinik_SelectedIndexChanged(object sender, EventArgs e)
@@ -192,15 +168,14 @@ namespace HospitalAppointment
                 MessageBox.Show("Geçerli bir klinik seçmelisiniz.");
             }
         }
-        
+
         private void List_Doktor_SelectedIndexChanged(object sender, EventArgs e)
         {
             DateTime secilenTarih = Date_RandevuTarih.Value.Date;
 
             // Seçili doktorun ID'si
-            var selectedDoktor = List_Doktor.SelectedItem as DataRowView;
 
-            if (selectedDoktor != null)
+            if (List_Doktor.SelectedItem is DataRowView selectedDoktor)
             {
                 int doktorID = Convert.ToInt32(selectedDoktor["Doktor_ID"]);
 
@@ -220,5 +195,11 @@ namespace HospitalAppointment
             RandevuEkle(randevu);
         }
 
+        private void Btn_GeriDon_Click(object sender, EventArgs e)
+        {
+            var vatandasIslemleri = new VatandasIslemleri();
+            vatandasIslemleri.Show();
+            this.Close();
+        }
     }
 }

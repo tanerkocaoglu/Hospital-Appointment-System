@@ -1,7 +1,4 @@
 ﻿using HospitalAppointment.Models;
-using Microsoft.Data.SqlClient;
-using System.Configuration;
-using System.Data;
 
 namespace HospitalAppointment
 {
@@ -11,55 +8,11 @@ namespace HospitalAppointment
         {
             InitializeComponent();
         }
-        public static string vatandasTC = "";
-        public static string doktorTC = "";
+        private static string vatandasTC = "";
+        private static string doktorTC = "";
 
-        private void Btn_VatandasKayıt_Click(object sender, EventArgs e)
-        {
-            string sqlSorgusu = "insert into Tbl_Vatandaslar(TC,Ad,Soyad,Telefon,Sifre) values(@TC,@Ad,@Soyad,@Telefon,@Sifre)";
-
-            try
-            {
-                VatandasC vatandas = new(Txt_VatandasTc.Text.Trim(), Txt_VatandasAd.Text.Trim(), Txt_VatandasSoyad.Text.Trim(), Txt_VatandasTel.Text.Trim(), Txt_VatandasSifre.Text.Trim());
-
-                var parametreler = new Dictionary<string, object>()
-                {
-                    {"@TC", vatandas.TC},
-                    {"@Ad",vatandas.Ad },
-                    {"@Soyad",vatandas.Soyad},
-                    {"@Telefon",vatandas.Telefon},
-                    {"@Sifre", vatandas.Sifre}
-                };
-
-                var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
-
-                if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
-                {
-                    MessageBox.Show("Kayıt işlemi başarılı");
-                }
-                else
-                    MessageBox.Show("Kayıt olunurken bir hata oluştu!!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        private void Btn_VatandasGiris_Click(object sender, EventArgs e)
-        {
-            KullaniciGiris("Tbl_Vatandaslar", Txt_VatandasGirisTc, Txt_VatandasGirisSifre);
-        }
-
-        private void Btn_DoktorGiris_Click(object sender, EventArgs e)
-        {
-            KullaniciGiris("Tbl_Doktorlar", Txt_DoktorTc, Txt_DoktorSifre);
-        }
-
-        private void Btn_YetkiliGiris_Click(object sender, EventArgs e)
-        {
-
-            KullaniciGiris("Tbl_Yetkililer", Txt_YetkiliTc, Txt_YetkiliSifre);
-        }
+        public static string VatandasTC { get => vatandasTC; set => vatandasTC = value; }
+        public static string DoktorTC { get => doktorTC; set => doktorTC = value; }
 
         private void KullaniciGiris(string tabloAdi, TextBox tcTextBox, TextBox sifreTextBox)
         {
@@ -83,8 +36,8 @@ namespace HospitalAppointment
                 };
                 var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, tekDegerMi: true);
 
-                vatandasTC = tcTextBox.Text;
-                doktorTC = tcTextBox.Text;
+                VatandasTC = tcTextBox.Text;
+                DoktorTC = tcTextBox.Text;
 
                 if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
                     TabloyaGoreGirisYap(tabloAdi);
@@ -119,9 +72,44 @@ namespace HospitalAppointment
 
         private void VatandasGiris()
         {
-            var randevu = new Randevu();
-            randevu.Show();
+            var vatandasIslemleri = new VatandasIslemleri();
+            vatandasIslemleri.Show();
             this.Hide();
+        }
+
+        private static void VatandasKayit(VatandasC vatandas)
+        {
+            string sqlSorgusu = "insert into Tbl_Vatandaslar(TC,Ad,Soyad,Telefon,Sifre) values(@TC,@Ad,@Soyad,@Telefon,@Sifre)";
+            try
+            {
+                var kullaniciVarMi = VeritabaniIslemleri.KullaniciVarMi(vatandas.TC);
+
+                if (!kullaniciVarMi)
+                {
+                    var parametreler = new Dictionary<string, object>()
+                {
+                    {"@TC", vatandas.TC},
+                    {"@Ad",vatandas.Ad },
+                    {"@Soyad",vatandas.Soyad},
+                    {"@Telefon",vatandas.Telefon},
+                    {"@Sifre", vatandas.Sifre}
+                };
+                    var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+
+                    if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
+                    {
+                        MessageBox.Show("Kayıt işlemi başarılı");
+                    }
+                    else
+                        MessageBox.Show("Kayıt olunurken bir hata oluştu!!");
+                }
+                else
+                    MessageBox.Show("Vatandaş zaten kayıtlı.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void YetkiliGiris()
@@ -174,5 +162,33 @@ namespace HospitalAppointment
             // Tüm kurallardan geçtiyse geçerlidir
             return true;
         }
+
+        private void Btn_VatandasKayıt_Click(object sender, EventArgs e)
+        {
+            var vatandas = new VatandasC(Txt_VatandasTc.Text.Trim(), Txt_VatandasAd.Text.Trim(), Txt_VatandasSoyad.Text.Trim(), Txt_VatandasTel.Text.Trim(), Txt_VatandasSifre.Text.Trim());
+            VatandasKayit(vatandas);
+        }
+
+        private void Btn_VatandasGiris_Click(object sender, EventArgs e)
+        {
+            KullaniciGiris("Tbl_Vatandaslar", Txt_VatandasGirisTc, Txt_VatandasGirisSifre);
+        }
+
+        private void Btn_DoktorGiris_Click(object sender, EventArgs e)
+        {
+            KullaniciGiris("Tbl_Doktorlar", Txt_DoktorTc, Txt_DoktorSifre);
+        }
+
+        private void Btn_YetkiliGiris_Click(object sender, EventArgs e)
+        {
+
+            KullaniciGiris("Tbl_Yetkililer", Txt_YetkiliTc, Txt_YetkiliSifre);
+        }
+
+        private void Ana_Sayfa_Load(object sender, EventArgs e)
+        {
+
+        }
     }
+
 }

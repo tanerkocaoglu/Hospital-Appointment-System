@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Randevu));
             Lbl_VatandasTC = new Label();
             label1 = new Label();
             List_Doktor = new ListBox();
@@ -37,6 +38,7 @@
             label2 = new Label();
             label3 = new Label();
             Cmb_RandevuSaat = new ComboBox();
+            Btn_GeriDon = new Button();
             SuspendLayout();
             // 
             // Lbl_VatandasTC
@@ -85,12 +87,14 @@
             // 
             // Btn_RandevuEkle
             // 
+            Btn_RandevuEkle.BackColor = SystemColors.ControlLightLight;
+            Btn_RandevuEkle.FlatStyle = FlatStyle.Flat;
             Btn_RandevuEkle.Location = new Point(578, 95);
             Btn_RandevuEkle.Name = "Btn_RandevuEkle";
             Btn_RandevuEkle.Size = new Size(250, 167);
             Btn_RandevuEkle.TabIndex = 5;
             Btn_RandevuEkle.Text = "RANDEVU OLUŞTUR";
-            Btn_RandevuEkle.UseVisualStyleBackColor = true;
+            Btn_RandevuEkle.UseVisualStyleBackColor = false;
             Btn_RandevuEkle.Click += Btn_RandevuEkle_Click;
             // 
             // label2
@@ -119,11 +123,25 @@
             Cmb_RandevuSaat.Size = new Size(250, 28);
             Cmb_RandevuSaat.TabIndex = 7;
             // 
+            // Btn_GeriDon
+            // 
+            Btn_GeriDon.BackColor = SystemColors.ControlLightLight;
+            Btn_GeriDon.FlatStyle = FlatStyle.Flat;
+            Btn_GeriDon.Location = new Point(743, 287);
+            Btn_GeriDon.Name = "Btn_GeriDon";
+            Btn_GeriDon.Size = new Size(85, 29);
+            Btn_GeriDon.TabIndex = 8;
+            Btn_GeriDon.Text = "Geri Dön";
+            Btn_GeriDon.UseVisualStyleBackColor = false;
+            Btn_GeriDon.Click += Btn_GeriDon_Click;
+            // 
             // Randevu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientActiveCaption;
             ClientSize = new Size(841, 328);
+            Controls.Add(Btn_GeriDon);
             Controls.Add(Cmb_RandevuSaat);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -133,7 +151,9 @@
             Controls.Add(List_Doktor);
             Controls.Add(label1);
             Controls.Add(Lbl_VatandasTC);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Randevu";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Randevu";
             Load += Randevu_Load;
             ResumeLayout(false);
@@ -151,5 +171,6 @@
         private Label label2;
         private Label label3;
         private ComboBox Cmb_RandevuSaat;
+        private Button Btn_GeriDon;
     }
 }

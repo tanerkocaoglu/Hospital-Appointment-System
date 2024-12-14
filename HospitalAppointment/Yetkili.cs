@@ -1,5 +1,4 @@
-﻿using System.Data;
-using HospitalAppointment.Model;
+﻿using HospitalAppointment.Model;
 using HospitalAppointment.Models;
 
 namespace HospitalAppointment
@@ -12,36 +11,6 @@ namespace HospitalAppointment
         }
 
         Int16 doktorId;
-
-        private static void KlinikDoldur(ComboBox comboBox, List<KlinikC> klinikler)
-        {
-
-            string sqlSorgusu = "select * from Tbl_Klinikler where aktifMi='1' order by Klinik_Ad asc";
-
-            if (VeritabaniIslemleri.SorguCalistir(sqlSorgusu) is DataTable sonuc)
-            {
-                klinikler.Clear();
-
-                foreach (DataRow row in sonuc.Rows)
-                {
-                    var klinik = new KlinikC(
-                        klinikAd: row["Klinik_Ad"].ToString(),
-                        klinikID: Convert.ToInt32(row["Klinik_ID"])
-                    );
-
-                    klinikler.Add(klinik);
-                }
-
-                comboBox.DataSource = klinikler;
-                comboBox.DisplayMember = "KlinikAd";
-                comboBox.ValueMember = "KlinikID";
-            }
-            else
-            {
-                MessageBox.Show("Klinikler yüklenirken bir hata oluştu.");
-            }
-
-        }
 
         private void KlinikSayısı()
         {
@@ -61,8 +30,8 @@ namespace HospitalAppointment
         private void KlinikIslemleri()
         {
             List<KlinikC> klinikler = [];
-            KlinikDoldur(Cmb_Klinik, klinikler);
-            KlinikDoldur(Cmb_DoktorKlinik, klinikler);
+            VeritabaniIslemleri.KlinikDoldur(Cmb_Klinik, klinikler);
+            VeritabaniIslemleri.KlinikDoldur(Cmb_DoktorKlinik, klinikler);
             KlinikSayısı();
         }
 
@@ -89,7 +58,6 @@ namespace HospitalAppointment
             }
             else
                 MessageBox.Show("Klinik eklenirken bir hata oluştu.");
-
         }
 
         private void KlinikSil(KlinikC klinik)
@@ -110,7 +78,6 @@ namespace HospitalAppointment
             }
             else
                 MessageBox.Show("Klinik silinemedi.");
-
         }
 
         private static void DoktorGridDoldur(DataGridView dataGridView)
@@ -130,12 +97,8 @@ namespace HospitalAppointment
                 Tbl_Klinikler k ON d.Klinik_ID = k.Klinik_ID
             WHERE
                 d.aktifMi = '1'";
-            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu);
-            if (sonuc is DataTable dt)
-                dataGridView.DataSource = sonuc;
-            else
-                MessageBox.Show("Doktorlar yüklenirken hata oluştu!");
 
+            VeritabaniIslemleri.GridDoldur(sqlSorgusu, dataGridView);
         }
 
         private void DoktorEkle(DoktorC doktor)
@@ -144,25 +107,31 @@ namespace HospitalAppointment
             insert into Tbl_Doktorlar(TC,Ad,Soyad,Telefon,Sifre,Klinik_ID)
             values(@TC,@Ad,@Soyad,@Telefon,@Sifre,@Klinik_ID)";
 
-            var parametreler = new Dictionary<string, object>()
+            var doktorVarMi = VeritabaniIslemleri.KullaniciVarMi(doktor.TC);
+
+            if (!doktorVarMi)
             {
+                var parametreler = new Dictionary<string, object>()
+                {
                 {"@TC", doktor.TC },
                 {"@Ad",doktor.Ad },
                 {"@Soyad",doktor.Soyad },
                 {"@Telefon",doktor.Telefon },
                 {"@Sifre",doktor.Sifre },
                 {"@Klinik_ID",doktor.Klinik_ID }
-            };
+                };
 
-            var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
-            if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
-            {
-                MessageBox.Show("Doktor başarıyla etkilendi.");
-                DoktorGridDoldur(Grid_Doktorlar);
+                var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, islemTuru: true);
+                if (sonuc is int etkilenenSatir && etkilenenSatir > 0)
+                {
+                    MessageBox.Show("Doktor başarıyla etkilendi.");
+                    DoktorGridDoldur(Grid_Doktorlar);
+                }
+                else
+                    MessageBox.Show("Doktor eklenirken bir sorun oluştu.");
             }
             else
-                MessageBox.Show("Doktor eklenirken bir sorun oluştu.");
-
+                MessageBox.Show("Doktor zaten kayıtlı.");
         }
 
         private void DoktorGuncelle(DoktorC doktor)
@@ -227,6 +196,7 @@ namespace HospitalAppointment
 
         private void Yetkili_Load(object sender, EventArgs e)
         {
+            _ = new GridView_Tasarim(Grid_Doktorlar);
             KlinikIslemleri();
             DoktorGridDoldur(Grid_Doktorlar);
         }
@@ -258,7 +228,9 @@ namespace HospitalAppointment
                     return;
                 }
                 var doktor = new DoktorC(Txt_DoktorTC.Text.Trim(), Txt_DoktorAd.Text.Trim(), Txt_DoktorSoyad.Text.Trim(), Txt_DoktorTelefon.Text.Trim(), Txt_DoktorSifre.Text.Trim(), (int)Cmb_DoktorKlinik.SelectedValue);
+
                 DoktorEkle(doktor);
+
             }
             catch (Exception ex)
             {
@@ -297,12 +269,12 @@ namespace HospitalAppointment
 
                 doktorId = (Int16)selectedRow.Cells["ID"].Value;
 
-                string doktorTc = selectedRow.Cells["T.C. NO"].Value as string;
-                string doktorAd = selectedRow.Cells["Ad"].Value as string;
-                string doktorSoyad = selectedRow.Cells["Soyad"].Value as string;
-                string doktorTelefon = selectedRow.Cells["Telefon"].Value as string;
-                string doktorSifre = selectedRow.Cells["Sifre"].Value as string;
-                string klinikAd = selectedRow.Cells["Klinik"].Value as string;
+                string doktorTc = (string)selectedRow.Cells["T.C. NO"].Value;
+                string doktorAd = (string)selectedRow.Cells["Ad"].Value;
+                string doktorSoyad = (string)selectedRow.Cells["Soyad"].Value;
+                string doktorTelefon = (string)selectedRow.Cells["Telefon"].Value;
+                string doktorSifre = (string)selectedRow.Cells["Sifre"].Value;
+                string klinikAd = (string)selectedRow.Cells["Klinik"].Value;
 
                 // Textbox'lara doktor bilgilerini doldur
                 Txt_DoktorTC.Text = doktorTc;
@@ -314,7 +286,7 @@ namespace HospitalAppointment
                 // ComboBox'ta klinik adını seçili hale getir
                 foreach (var item in Cmb_DoktorKlinik.Items)
                 {
-                    var klinik = item as KlinikC;
+                    var klinik = (KlinikC)item;
                     if (klinik != null && klinik.KlinikAd == klinikAd)
                     {
                         Cmb_DoktorKlinik.SelectedItem = item;
@@ -323,7 +295,6 @@ namespace HospitalAppointment
                 }
             }
         }
-
 
     }
 }
