@@ -36,7 +36,8 @@ Hospital Appointment System, bir hastanenin randevu yönetimini dijitalleştirme
 
 ### Kurulum Adımları
 1. Bu repoyu klonlayın:
-   ```bash git clone https://github.com/tanerkocaoglu/Hospital-Appointment-System.git
+   ```bash
+   git clone https://github.com/tanerkocaoglu/Hospital-Appointment-System.git
 2. Visual Studio ile hastaneOtomasyonuProjesi.sln dosyasını açın.
 3. Gerekli bağımlılıkları NuGet Paket Yöneticisi'ni kullanarak yükleyin.
 4. SQL Server'da bir veritabanı oluşturun ve appsettings.json dosyasını veritabanı bağlantı bilgileriyle güncelleyin.
