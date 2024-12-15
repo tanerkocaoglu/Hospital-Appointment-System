@@ -1,4 +1,4 @@
-﻿using HospitalAppointment.Model;
+﻿using HospitalAppointment.Models;
 using System.Data;
 namespace HospitalAppointment
 {
@@ -146,14 +146,23 @@ namespace HospitalAppointment
             SaatleriDoldur(secilenTarih, Cmb_RandevuSaat, doktorID);
         }
 
+        // Randevu formu yüklendiğinde çalışacak metot
         private void Randevu_Load(object sender, EventArgs e)
         {
+            // Vatandaşın TC kimlik numarası Ana_Sayfa'dan alınarak etikete yazılır
             Lbl_VatandasTC.Text = Ana_Sayfa.VatandasTC;
+
+            // Klinik listesini tutacak bir liste oluşturulur
             List<KlinikC> klinikler = [];
+
+            // Klinik bilgileri veritabanından alınır ve ComboBox'a doldurulur
             VeritabaniIslemleri.KlinikDoldur(Cmb_Klinik, klinikler);
 
-            Date_RandevuTarih.MinDate = DateTime.Today.AddDays(1);
-            Date_RandevuTarih.MaxDate = DateTime.Today.AddDays(14);
+            // Randevu tarihinin minimum ve maksimum değerleri belirlenir
+            Date_RandevuTarih.MinDate = DateTime.Today.AddDays(1); // Bugünden bir gün sonrası minimum tarih
+            Date_RandevuTarih.MaxDate = DateTime.Today.AddDays(14); // Bugünden iki hafta sonrası maksimum tarih
+
+            // Varsayılan olarak randevu tarihi bugünden bir gün sonrası olarak ayarlanır
             Date_RandevuTarih.Value = DateTime.Today.AddDays(1);
         }
 
@@ -189,18 +198,30 @@ namespace HospitalAppointment
             }
         }
 
+        // "Randevu Ekle" butonuna tıklanıldığında çalışacak metot
         private void Btn_RandevuEkle_Click(object sender, EventArgs e)
         {
-            var randevu = new RandevuC(vatandasTC: Lbl_VatandasTC.Text, doktorID: Convert.ToInt32(List_Doktor.SelectedValue),
-                randevuTarih: Date_RandevuTarih.Value);
+            // Yeni bir RandevuC nesnesi oluşturulur ve kullanıcının girdiği bilgiler atanır
+            var randevu = new RandevuC(
+                vatandasTC: Lbl_VatandasTC.Text, // Vatandaşın TC kimlik numarası
+                doktorID: Convert.ToInt32(List_Doktor.SelectedValue), // Seçilen doktorun ID'si
+                randevuTarih: Date_RandevuTarih.Value // Seçilen randevu tarihi
+            );
+
+            // Randevuyu eklemek için yardımcı metoda gönderilir
             RandevuEkle(randevu);
         }
 
+        // "Geri Dön" butonuna tıklanıldığında çalışacak metot
         private void Btn_GeriDon_Click(object sender, EventArgs e)
         {
+            // Vatandaş işlemleri ekranını açar
             var vatandasIslemleri = new VatandasIslemleri();
             vatandasIslemleri.Show();
-            this.Close();
+
+            // Mevcut formu kapatır
+            Close();
         }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using HospitalAppointment.Model;
-using HospitalAppointment.Models;
+﻿using HospitalAppointment.Models;
 
 namespace HospitalAppointment;
 

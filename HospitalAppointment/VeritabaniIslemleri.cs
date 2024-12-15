@@ -1,4 +1,4 @@
-﻿using HospitalAppointment.Model;
+﻿using HospitalAppointment.Models;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 using System.Data;
@@ -56,7 +56,7 @@ public class VeritabaniIslemleri
             {"@TC",tc}
         };
 
-        var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler, tekDegerMi: true);
+        var sonuc = SorguCalistir(sqlSorgusu, parametreler, tekDegerMi: true);
         if (sonuc != null && int.TryParse(sonuc.ToString(), out _))
         {
             return true;
@@ -68,7 +68,7 @@ public class VeritabaniIslemleri
     {
         string sqlSorgusu = "select * from Tbl_Klinikler where aktifMi = 1 order by Klinik_Ad asc";
 
-        if (VeritabaniIslemleri.SorguCalistir(sqlSorgusu) is DataTable sonuc)
+        if (SorguCalistir(sqlSorgusu) is DataTable sonuc)
         {
             klinikler.Clear();
 
@@ -95,7 +95,7 @@ public class VeritabaniIslemleri
     public static void GridDoldur(string sqlSorgusu, DataGridView dataGridView, Dictionary<string, object>? parametreler = null)
     {
         // SQL sorgusunu çalıştır
-        var sonuc = VeritabaniIslemleri.SorguCalistir(sqlSorgusu, parametreler);
+        var sonuc = SorguCalistir(sqlSorgusu, parametreler);
 
         if (sonuc is DataTable dataTable)
         {
